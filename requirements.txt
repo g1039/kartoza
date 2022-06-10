@@ -1,5 +1,7 @@
 Django==3.2.2
 django-environ==0.4.5
+django-phonenumber-field==6.1.0
+django-phonenumbers==1.0.1
 djangorestframework==3.12.4
 factory-boy==3.2.0
 Pillow==8.2.0

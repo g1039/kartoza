@@ -46,8 +46,13 @@ DJANGO_APPS = [
     "django.contrib.staticfiles",
 ]
 
-THIRD_PARTY_APPS: List[str] = []
-LOCAL_APPS: List[str] = []
+THIRD_PARTY_APPS: List[str] = [
+    "phonenumber_field",
+    "django_phonenumbers",
+]
+LOCAL_APPS: List[str] = [
+    "webapp.portfolio.apps.PortfolioConfig",
+]
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 MIDDLEWARE = [
@@ -134,3 +139,5 @@ STATIC_URL = "/static/"
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+AUTH_USER_MODEL = "portfolio.CustomUser"
