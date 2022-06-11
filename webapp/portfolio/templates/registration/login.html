@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+	<div class="col-6">
+	<div class="card">
+	<div class="card-body">
+	<h2>Log in</h2>
+	<form method="post" action="{% url 'login' %}" novalidate="novalidate">
+	<div class="form-row">
+	<div class="form-group col-md-6">
+	{% csrf_token %}
+		<div class="form-group">
+			<label
+				for="{{ form.username.id_for_label }}"
+				class="font-size-h7">
+				Username (Email address)
+			</label>
+			{% render_field form.username class="form-control" type="text" placeholder="Your email address" maxlength="50" required="true" %}
+			{{ form.username.errors.as_span }}
+			<span class="form-text text-muted">
+				{{ form.username.help_text }}
+			</span>
+		</div>
+		<div class="form-group">
+			<label
+				for="{{ form.password.id_for_label }}"
+				class="font-size-h7">
+				Password
+			</label>
+			<div class="input-group">
+				{% render_field form.password class="form-control" placeholder="Your password" autocomplete="off" required="true" %}
+			</div>
+			{{ form.password.errors.as_span }}
+			<span class="form-text text-muted">
+				{{ form.password.help_text }}
+			</span>
+			<input type="hidden" name="next" value="{{ next }}">
+		</div>
+	</div>
+	</div>
+	<button type="submit" class="btn btn btn-primary my-2 my-sm-0">Login</button>
+	</form>
+</div>
+</div>
+</div>
+</div>
+{% endblock %}

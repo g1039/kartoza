@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+{% if user.is_authenticated %}
+<div class="jumbotron jumbotron-fluid">
+<div class="container">
+  <h1 class="display-4">Hi, {{ user.first_name }}!</h1>
+  <p class="lead">Welcome to your digital portfolio.</p>
+</div>
+</div>
+{% else %}
+<div class="jumbotron jumbotron-fluid">
+<div class="container">
+  <h1 class="display-4">Hi, Anonymous</h1>
+  <p class="lead">You are not logged in.</p>
+  <hr class="my-4">
+  <a class="btn btn btn-primary my-2 my-sm-0" href="{% url 'login' %}" role="button">Login</a>
+  <a class="btn btn btn-secondary my-2 my-sm-0" href="{% url 'signup' %}" role="button">Sign up</a>
+</div>
+</div>
+{% endif %}
+{% endblock %}

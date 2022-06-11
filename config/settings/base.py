@@ -14,6 +14,7 @@ from pathlib import Path
 from typing import List
 
 import environ
+from django.urls import reverse_lazy
 
 env = environ.Env(DEBUG=(bool, False))
 
@@ -49,6 +50,8 @@ DJANGO_APPS = [
 THIRD_PARTY_APPS: List[str] = [
     "phonenumber_field",
     "django_phonenumbers",
+    "widget_tweaks",
+    "crispy_forms",
 ]
 LOCAL_APPS: List[str] = [
     "webapp.portfolio.apps.PortfolioConfig",
@@ -64,6 +67,15 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+
+AUTHENTICATION_BACKENDS = [
+    "django.contrib.auth.backends.ModelBackend",
+    "webapp.portfolio.auth.backends.EmailBackend",
+]
+
+LOGIN_URL = reverse_lazy("login")
+LOGIN_REDIRECT_URL = reverse_lazy("home")
+LOGOUT_REDIRECT_URL = reverse_lazy("home")
 
 ROOT_URLCONF = "config.urls"
 

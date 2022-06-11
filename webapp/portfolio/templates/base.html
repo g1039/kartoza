@@ -1,0 +1,54 @@
+{% load static %}
+{% load widget_tweaks %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <title>{% block title %}{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+</head>
+<body>
+	<nav class="navbar navbar-expand-lg navbar-light bg-light">
+		<div class="container">
+		  <a class="navbar-brand" href="{% url 'home' %}">PORTFOLIO</a>
+		  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+		    <span class="navbar-toggler-icon"></span>
+		  </button>
+		  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+		    <ul class="navbar-nav mr-auto">
+		      <li class="{% if '/' == request.path %} nav-item active {% endif %}">
+		        <a class="nav-link" href="{% url 'home' %}">Home</a>
+		      </li>
+		    {% if user.is_authenticated %}
+
+		      <li class="nav-item">
+		        <a class="nav-link" href="#">Profile</a>
+		      </li>
+		      <li class="nav-item">
+		        <a class="nav-link" href="#">Map</a>
+		      </li>
+		      <li class="nav-item">
+                <form action="{% url 'logout' %}" method="POST" novalidate>
+					{% csrf_token %}
+					<input class="btn btn-outline-danger" type="submit" value="Logout">
+				</form>
+		      </li>
+		    {% endif %}
+		    </ul>
+		  </div>
+		</div>
+	</nav>
+<div class="card">
+<div class="card-body">
+{% block content %}
+{% endblock %}
+</div>
+</div>
+<script src="{% static 'js/jquery-3.4.1.slim.min.js' %}"></script>
+<script src="{% static 'js/popper.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+</body>
+</html>
