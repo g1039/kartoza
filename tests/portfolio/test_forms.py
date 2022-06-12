@@ -2,9 +2,10 @@ from unittest.mock import patch
 
 import pytest
 from django.contrib.auth.forms import AuthenticationForm
+from django.test import RequestFactory
 
 from webapp.portfolio.factories import CustomUserFactory
-from webapp.portfolio.forms import CustomUserCreationForm
+from webapp.portfolio.forms import CustomUserCreationForm, ProfileDetailsForm
 
 
 @pytest.mark.django_db
@@ -95,3 +96,19 @@ class TestLoginForm:
         assert len(form.errors) == 2
         assert form.errors["username"] == ["This field is required."]
         assert form.errors["password"] == ["This field is required."]
+
+
+class TestProfileDetailsForm:
+    @pytest.mark.django_db
+    def test_clean_authenticated(self, rf: RequestFactory) -> None:
+        user = CustomUserFactory()
+        form = ProfileDetailsForm(
+            data={
+                "first_name": user.first_name,
+                "last_name": user.last_name,
+                "home_address": user.home_address,
+                "phone_number": user.phone_number,
+            }
+        )
+        assert form.is_valid() is True
+        assert form.errors == {}

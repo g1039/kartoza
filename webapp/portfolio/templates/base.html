@@ -25,7 +25,8 @@
 		    {% if user.is_authenticated %}
 
 		      <li class="nav-item">
-		        <a class="nav-link" href="#">Profile</a>
+				<li class="{% if '/profile/' == request.path %} nav-item active {% endif %}">
+		        <a class="nav-link" href="{% url 'profile-detail' %}">Profile</a>
 		      </li>
 		      <li class="nav-item">
 		        <a class="nav-link" href="#">Map</a>

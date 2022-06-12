@@ -1,4 +1,5 @@
 from http import HTTPStatus
+from unittest.mock import Mock, patch
 
 import pytest
 from django.contrib.auth import get_user_model
@@ -7,7 +8,7 @@ from django.test import Client, RequestFactory
 from django.urls import reverse
 
 from webapp.portfolio.factories import CustomUserFactory
-from webapp.portfolio.views import home_view, logout_view
+from webapp.portfolio.views import ProfileDetailView, home_view, logout_view
 
 User = get_user_model()
 
@@ -81,3 +82,51 @@ def test_signup_view(client: Client) -> None:
     assert response.status_code == HTTPStatus.FOUND
     assert response.url == reverse("login")
     assert user.email == "foo@mail.com"
+
+
+class TestProfileDetailView:
+    def test_get_initial(self, rf: RequestFactory) -> None:
+        user = CustomUserFactory.build()
+        request = rf.get("some-url")
+        request.user = user
+        view = ProfileDetailView(request=request)
+        expected_result = {
+            "first_name": user.first_name,
+            "last_name": user.last_name,
+            "email": user.email,
+            "home_address": user.home_address,
+            "phone_number": user.phone_number,
+        }
+        actual_result = view.get_initial()
+        assert actual_result == expected_result
+
+    @pytest.mark.django_db
+    def test_get_is_editable(self, rf: RequestFactory) -> None:
+        request = rf.get("some-url")
+        request.user = CustomUserFactory(is_active=True)
+        view = ProfileDetailView(request=request)
+        response = view.get_is_editable()
+        assert type(response) == bool
+
+    @pytest.mark.django_db
+    def test_form_valid(self, rf: RequestFactory) -> None:
+        user = CustomUserFactory(
+            is_active=True, last_name="Zuckerberg", phone_number="+27639920376"
+        )
+        request = rf.get("some-url")
+        form = Mock()
+        form.cleaned_data = {
+            "first_name": user.first_name,
+            "last_name": "Jones",
+            "home_address": user.home_address,
+            "phone_number": "+27812638653",
+        }
+        request.user = user
+
+        view = ProfileDetailView(request=request)
+
+        with patch("webapp.portfolio.views.messages"):
+            response = view.form_valid(form)
+
+        assert response.status_code == HTTPStatus.FOUND
+        assert response.url == reverse("profile-detail")

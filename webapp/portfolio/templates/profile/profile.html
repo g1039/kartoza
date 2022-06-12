@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% load form_tags %}
+
+{% block title %}Profile Details{% endblock %}
+
+{% block content %}
+<style type="text/css">
+textarea {
+ background-color: transparent;
+ font-size: 12px;
+ font-family: Verdana, Arial, Helvetica, sans-serif;
+ border: 0px solid black;
+}
+</style>
+{% if user.is_authenticated %}
+<br>
+<div class="content-section">
+    <form method="POST" action="{% url 'profile-detail' %}?{{ request.GET|encode_query_dict }}">
+        {% csrf_token %}
+        <fieldset class="form-group">
+
+            {% if is_editable is False %}
+            <a href="{% url 'profile-detail' %}?editable=true" class="w-100px h-40px btn btn-outline-primary btn-mobile">
+                Edit
+            </a>
+            {% endif %}
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group row">
+                  <label class="col-sm-3 col-form-label">First Name</label>
+                  <div class="col-sm-9">
+                    {% render_field form.first_name class="form-control" %}
+
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group row">
+                  <label class="col-sm-3 col-form-label">Last Name</label>
+                  <div class="col-sm-9">
+                    {% render_field form.last_name class="form-control" %}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group row">
+                  <label class="col-sm-3 col-form-label">Email</label>
+                  <div class="col-sm-9">
+                    {% render_field form.email class="form-control" %}
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group row">
+                  <label class="col-sm-3 col-form-label">Home Address</label>
+                  <div class="col-sm-9">
+                    {% render_field form.home_address class="form-control" %}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group row">
+                  <label class="col-sm-3 col-form-label">Phone Number</label>
+                  <div class="col-sm-9">
+                    {% render_field form.phone_number class="form-control" %}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+        <div class="form-group">
+            {% if is_editable is True %}
+            <a href="{% url 'profile-detail' %}" class="btn btn-outline-primary btn-mobile">
+                Cancel
+            </a>
+            <button id="submit_button" class="btn btn-primary btn-mobile mb-2 mb-sm-0">Submit</button>
+            {% endif %}
+        </div>
+    </form>
+</div>
+{% else %}
+<div class="jumbotron jumbotron-fluid">
+<div class="container">
+  <h1 class="display-4">Hi, Anonymous</h1>
+  <p class="lead">You are not logged in.</p>
+  <hr class="my-4">
+  <a class="btn btn-primary btn-lg" href="{% url 'login' %}" role="button">Sign in</a>
+</div>
+</div>
+{% endif %}
+{% endblock %}

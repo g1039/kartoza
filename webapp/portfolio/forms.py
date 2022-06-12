@@ -32,3 +32,35 @@ class CustomUserCreationForm(UserCreationForm):
         if commit:
             user.save()
         return user
+
+
+class ProfileDetailsForm(forms.Form):
+    """Read only form with user profile details."""
+
+    first_name = forms.CharField(
+        help_text="Your first name.",
+        disabled=False,
+        required=True,
+    )
+    last_name = forms.CharField(
+        help_text="Your last name.",
+        disabled=False,
+        required=True,
+    )
+    email = forms.EmailField(
+        help_text="Your email address.",
+        disabled=True,
+        required=False,
+    )
+
+    home_address = forms.CharField(
+        help_text="Your home address.",
+        disabled=False,
+        required=False,
+    )
+
+    phone_number = forms.CharField(
+        help_text="Your phone number.",
+        disabled=False,
+        required=True,
+    )
