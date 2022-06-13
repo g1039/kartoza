@@ -1,13 +1,14 @@
 """Database models for the portfolio application."""
 
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
-from django.db import models
+from django.contrib.gis.db import models
 from django.utils import timezone
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 from phonenumber_field.modelfields import PhoneNumberField
 
 from webapp.portfolio.managers import CustomUserManager
+from webapp.portfolio.validators import phone_number_validator
 
 
 class Reference(models.Model):
@@ -48,12 +49,14 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         blank=True,
     )
     home_address = models.TextField(null=True, blank=True)
+    location = models.PointField(default=None, blank=True, null=True)
     phone_number = PhoneNumberField(
         unique=True,
         error_messages={"unique": "A user with that phone number already exists."},
         max_length=50,
         null=True,
         blank=True,
+        validators=[phone_number_validator],
     )
     is_staff = models.BooleanField(
         default=False,
@@ -67,8 +70,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         ),
     )
     date_joined = models.DateTimeField(default=timezone.now)
-    # TODO
-    # Location
+
     objects = CustomUserManager()
 
     EMAIL_FIELD = "email"

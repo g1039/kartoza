@@ -1,8 +1,7 @@
 """Admin panel for the portfolio application."""
 
-from django.contrib import admin
 from django.contrib.auth import get_user_model
-from django.contrib.auth.admin import UserAdmin
+from django.contrib.gis import admin
 from django.utils.translation import gettext_lazy as _
 
 from webapp.portfolio.forms import CustomUserCreationForm
@@ -23,7 +22,7 @@ FIELDSETS = (
     ),
     (
         _("Address info"),
-        {"fields": ("home_address",)},
+        {"fields": ("home_address", "location")},
     ),
     (
         _("Permissions"),
@@ -52,7 +51,7 @@ ADD_FIELDSETS = (
 
 
 @admin.register(User)
-class CustomUser(UserAdmin):
+class CustomUser(admin.OSMGeoAdmin):
     """Custom admin for the custom user model."""
 
     add_form = CustomUserCreationForm

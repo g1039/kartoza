@@ -1,10 +1,13 @@
 """Contains the application template based views."""
 
+import json
 from typing import Any
 
 from django.contrib.auth import logout as auth_logout
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import AuthenticationForm
+from django.core.serializers import serialize
 from django.http import HttpRequest, HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 from django.views import generic
@@ -15,6 +18,7 @@ from django.views.generic.edit import FormView
 from webapp.portfolio import messages, services
 from webapp.portfolio.forms import CustomUserCreationForm, ProfileDetailsForm
 from webapp.portfolio.mixins import ReadOnlyThemedFormMixin
+from webapp.portfolio.models import CustomUser
 from webapp.portfolio.parsers import parse_boolean
 
 
@@ -40,6 +44,7 @@ class LoginView(auth_views.LoginView):
     """Portfolio login view."""
 
     template_name = "registration/login.html"
+    form_class = AuthenticationForm
 
 
 class HomeView(TemplateView):
@@ -96,7 +101,22 @@ class ProfileDetailView(ReadOnlyThemedFormMixin, FormView):
         return super().form_valid(form=form)
 
 
+class MarkersMapView(TemplateView):
+    """Portfolio map view."""
+
+    template_name = "map/map.html"
+
+    def get_context_data(self, **kwargs: Any) -> Any:
+        """Add context for the view."""
+
+        context = super().get_context_data(**kwargs)
+        markers = CustomUser.objects.all()
+        context["markers"] = json.loads(serialize("geojson", markers))
+        return context
+
+
 sign_up_view = SignUpView.as_view()
 login_view = LoginView.as_view()
 home_view = HomeView.as_view()
 profile_detail_view = ProfileDetailView.as_view()
+markers_map_view = MarkersMapView.as_view()

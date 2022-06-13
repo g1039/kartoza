@@ -29,7 +29,8 @@
 		        <a class="nav-link" href="{% url 'profile-detail' %}">Profile</a>
 		      </li>
 		      <li class="nav-item">
-		        <a class="nav-link" href="#">Map</a>
+				<li class="{% if '/map/' == request.path %} nav-item active {% endif %}">
+		        <a class="nav-link" href="{% url 'markers-map' %}">Map</a>
 		      </li>
 		      <li class="nav-item">
                 <form action="{% url 'logout' %}" method="POST" novalidate>
