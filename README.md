@@ -7,8 +7,11 @@ Portfolio App
 Requirements:
 -------------
 
-- [python 3.10.3](https://python.org/downloads/>)
-- [virtualenv](https://virtualenv.pypa.io/en/stable/>)
+- [python 3.10.3](https://python.org/downloads/)
+- [virtualenv](https://virtualenv.pypa.io/en/stable/)
+- [postgresql](https://www.postgresql.org/download/)
+- [Geospatial libraries](https://docs.djangoproject.com/en/4.0/ref/contrib/gis/install/geolibs/)
+
 
 Getting Started
 ---------------
