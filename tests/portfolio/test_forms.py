@@ -2,7 +2,6 @@ from unittest.mock import patch
 
 import pytest
 from django.contrib.auth.forms import AuthenticationForm
-from django.test import RequestFactory
 
 from webapp.portfolio.factories import CustomUserFactory
 from webapp.portfolio.forms import CustomUserCreationForm, ProfileDetailsForm
@@ -100,15 +99,29 @@ class TestLoginForm:
 
 class TestProfileDetailsForm:
     @pytest.mark.django_db
-    def test_clean_authenticated(self, rf: RequestFactory) -> None:
-        user = CustomUserFactory()
+    def test_phone_number_is_unique_positive(self) -> None:
+        user = CustomUserFactory(email="foo@mail.com", phone_number="+27817702215")
         form = ProfileDetailsForm(
+            user=user,
             data={
                 "first_name": user.first_name,
                 "last_name": user.last_name,
                 "home_address": user.home_address,
                 "phone_number": user.phone_number,
-            }
+            },
         )
-        assert form.is_valid() is True
-        assert form.errors == {}
+        print(form)
+        assert form.is_valid()
+
+    @pytest.mark.django_db
+    def test_phone_number_is_unique(self) -> None:
+        user = CustomUserFactory(email="foo@mail.com", phone_number="+27817702214")
+        form = ProfileDetailsForm(
+            user=CustomUserFactory.build(),
+            data={
+                "phone_number": user.phone_number,
+            },
+        )
+
+        errors = form.errors["phone_number"]
+        assert errors[0] == "A user with that phone number already exists."
