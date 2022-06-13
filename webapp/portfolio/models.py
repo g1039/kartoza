@@ -1,5 +1,6 @@
 """Database models for the portfolio application."""
 
+from django.conf import settings
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.contrib.gis.db import models
 from django.utils import timezone
@@ -109,3 +110,21 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         """Return the short name for standard user model compatibility."""
 
         return self.first_name
+
+
+class UserActivity(models.Model):
+    """User login and logout activity model."""
+
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    login = models.DateTimeField(auto_now_add=True)
+    logout = models.DateTimeField(null=True, default=None)
+
+    class Meta:
+        verbose_name = "user activity"
+        verbose_name_plural = "user activities"
+        default_manager_name = "objects"
+
+    def __str__(self) -> str:
+        """Return the username."""
+
+        return self.user.username

@@ -5,6 +5,7 @@ from django.contrib.gis import admin
 from django.utils.translation import gettext_lazy as _
 
 from webapp.portfolio.forms import CustomUserCreationForm
+from webapp.portfolio.models import UserActivity
 
 User = get_user_model()
 
@@ -76,5 +77,27 @@ class CustomUser(admin.OSMGeoAdmin):
         "last_name",
         "email",
         "phone_number",
+    )
+    ordering = ("-pk",)
+
+
+@admin.register(UserActivity)
+class UserActivityAdmin(admin.OSMGeoAdmin):
+    """Custom admin for the custom user model."""
+
+    list_display = (
+        "id",
+        "user",
+        "login",
+        "logout",
+    )
+    readonly_fields = ("user", "login", "logout")
+    list_filter = (
+        "login",
+        "logout",
+    )
+    search_fields = (
+        "user__first_name",
+        "user__last_name",
     )
     ordering = ("-pk",)
