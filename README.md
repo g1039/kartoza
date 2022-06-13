@@ -38,6 +38,22 @@ $ make install
 
 4. Setup database
 
+Config your database
+
+```
+DATABASES = {
+    "default": {
+        "ENGINE": "django.contrib.gis.db.backends.postgis",
+        "NAME": os.environ.get("DB_NAME"),
+        "USER": os.environ.get("DB_USER"),
+        "PASSWORD": os.environ.get("DB_PASS"),
+        "HOST": "localhost",
+        "PORT": "5432",
+    }
+}
+```
+and then run the following command:
+
 ```
 $ make migrate
 $ make createsuperuser
